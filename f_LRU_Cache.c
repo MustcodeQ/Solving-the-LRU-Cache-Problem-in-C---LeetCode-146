@@ -1,7 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
+LRUCache Implementation in C
+Overview
+This program implements a Least Recently Used (LRU) Cache using a doubly linked list and a hash map for O(1) average time complexity for both get and put operations.
 
-// Node structure for doubly linked list
+Structures
+Node
+The Node structure represents a node in the doubly linked list.
+
+
 typedef struct Node
 {
     int key;
@@ -9,8 +14,15 @@ typedef struct Node
     struct Node *prev;
     struct Node *next;
 } Node;
+LRUCache
+The LRUCache structure contains the following:
 
-// LRUCache structure
+capacity: Maximum number of entries the cache can hold.
+size: Current number of entries in the cache.
+head: Pointer to the head node of the doubly linked list.
+tail: Pointer to the tail node of the doubly linked list.
+hashMap: Array of node pointers for fast access.
+
 typedef struct
 {
     int capacity;
@@ -19,8 +31,11 @@ typedef struct
     Node *tail;
     Node **hashMap;
 } LRUCache;
+Functions
+createNode
+Creates and initializes a new node with the given key and value.
 
-// Function to create a new node
+
 Node *createNode(int key, int value)
 {
     Node *node = (Node *)malloc(sizeof(Node));
@@ -30,8 +45,10 @@ Node *createNode(int key, int value)
     node->next = NULL;
     return node;
 }
+lRUCacheCreate
+Creates and initializes an LRUCache with the given capacity.
 
-// Function to create an LRUCache
+
 LRUCache *lRUCacheCreate(int capacity)
 {
     LRUCache *cache = (LRUCache *)malloc(sizeof(LRUCache));
@@ -46,8 +63,10 @@ LRUCache *lRUCacheCreate(int capacity)
     }
     return cache;
 }
+moveToHead
+Moves the given node to the head of the doubly linked list.
 
-// Function to move a node to the head
+
 void moveToHead(LRUCache *cache, Node *node)
 {
     if (node == cache->head)
@@ -71,8 +90,10 @@ void moveToHead(LRUCache *cache, Node *node)
     cache->head = node;
     node->prev = NULL;
 }
+removeTail
+Removes the tail node from the doubly linked list and updates the hash map.
 
-// Function to remove the tail node
+
 void removeTail(LRUCache *cache)
 {
     if (cache->tail == NULL)
@@ -95,8 +116,10 @@ void removeTail(LRUCache *cache)
     free(node);
     cache->size--;
 }
+lRUCacheGet
+Retrieves the value associated with the given key in the LRUCache.
 
-// Function to get the value of a key
+
 int lRUCacheGet(LRUCache *obj, int key)
 {
     Node *node = obj->hashMap[key];
@@ -108,8 +131,10 @@ int lRUCacheGet(LRUCache *obj, int key)
     moveToHead(obj, node);
     return node->value;
 }
+lRUCachePut
+Inserts a key-value pair into the LRUCache, evicting the least recently used entry if necessary.
 
-// Function to put a key-value pair
+
 void lRUCachePut(LRUCache *obj, int key, int value)
 {
     Node *node = obj->hashMap[key];
@@ -140,8 +165,10 @@ void lRUCachePut(LRUCache *obj, int key, int value)
         obj->size++;
     }
 }
+lRUCacheFree
+Frees the memory allocated for the LRUCache.
 
-// Function to free the LRUCache
+
 void lRUCacheFree(LRUCache *obj)
 {
     Node *current = obj->head;
@@ -154,6 +181,9 @@ void lRUCacheFree(LRUCache *obj)
     free(obj->hashMap);
     free(obj);
 }
+Main Function
+Demonstrates the usage of the LRUCache.
+
 
 int main()
 {
